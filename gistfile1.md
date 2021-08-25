@@ -253,5 +253,24 @@ Volatile quiere decir que cuando se cambia el INSTANCE se hace visible a otros t
 fun getInstance construye nuestra DB
 
 
+en nuestro main activity hacemos 
+
+```kotlin
+val dao = SchoolDataBase.getInstance(this).schoolDao
+
+val schools = listOf(
+ School("The kent School"),
+ School("Lastarria"),
+ School("Instituto Nacional"),
+ School("Carmela Carvajal Pratt") 
+)
+
+//coroutine
+lifecycleScope.launch{
+ schools.forEach{dao.insertDirector(it)}
+}
+```
+
+
 
 
