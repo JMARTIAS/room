@@ -26,7 +26,7 @@ despues se hace el sync now
 
 creo un paquete entities para agregar nuestras tablas, que son data clases, hay que poner el Entity para que lo reconozca. en tableName le cambio el nombre a la tabla en room, sino se llamará igual que la clase.
 
-# Relación 1:1
+## Relación 1:1
 
 Se pone el primary key con la anotación y para que no lo autogenere como los ids se setea en false
 ```kotlin
@@ -92,5 +92,5 @@ el on conflict lo que hace es que si quiero insertar una escuela que ya existe l
 
 podría pasar que haya unos problemas con los multi threads por eso se le pone Transaction, ya que estamos mezclando consultas a 2 tablas
 
-# Relación 1:N
+## Relación 1:N
 
