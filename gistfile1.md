@@ -68,4 +68,25 @@ val directorName: String,
 val schoolName: String)
 ```
 
+Luego hay que crear un objeto DAO (Data Access Object) que es una interface donde definimos las funciones para acceder a nuestra base de datos
+
+```kotlin
+@Dao
+interface SchoolDao {
+ @Insert(OnConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertSchool (school:School)
+ 
+ @Insert(OnConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertDirectpr (director:Director)
+ 
+ @Transaction
+ @Query("SELECT * FROM school WHERE schoolName =:schoolName")
+ suspend fun getSchoolAndDirectorWithSchoolName(schoolName:String): List<SchoolAndDirector>
+ 
+}
+```
+se usan funciones suspend pq se realizan en el background, para no bloquear el hilo principal.
+el on conflict lo que hace es que si quiero insertar una escuela que ya existe la voy a reemplazar
+
+podría pasar que haya unos problemas con los multi threads por eso se le pone Transaction, ya que estamos mezclando consultas a 2 tablas 
 
