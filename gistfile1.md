@@ -94,3 +94,47 @@ podría pasar que haya unos problemas con los multi threads por eso se le pone T
 
 ## Relación 1:N
 
+hay que ver en que tabla ponemos la primary key de la otra en esta relación, porque hay multiples alumnos que van a un colegio.
+
+```kotlin
+@Entity
+data class Student(
+@PrimaryKey(autoGenerate = false)
+ val studentName:String,
+ val semester:Int,
+ //esta es la primarykey de la otra entity
+ val schoolName: String
+)
+```
+
+en nuestro paquete de relations creamos una nueva clase de kotlin que por convención se llama tabla única With la tabla N
+
+```kotlin
+
+data class SchoolWithStudents(
+ @Embedded val school:School,
+ @Relation(
+ //este corresponde al school name de la clase que contiene multiples instancias de la otra
+  parentColumn = "schoolName",
+  //este corresponde al de los students
+  entityColumn = "schoolName"
+ )
+ val students: List<Student>
+)
+```
+el list va pq ahora tenemos varias instancias de alumnos.
+
+Luego lo que hay que hacer es actualizar nuestro DAO con las queries que necesitamos
+
+```kotlin
+ @Insert(OnConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertStudent (student:Student)
+ 
+ @Transaction
+ @Query("SELECT * FROM school WHERE schoolName =:schoolName)
+ suspend fun getSchoolWithStudents(schoolName:String): List<SchoolWithStudents>
+
+```
+
+
+
