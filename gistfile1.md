@@ -211,12 +211,46 @@ hay que agregar mas funciones al dao
 
 ```
 
-queremos crear una base de datos, entonces en nuestro root package hacemos una nueva clase
+queremos crear una base de datos, entonces en nuestro root package hacemos una nueva clase abstracta que extiende de la RoomDataBase(). tambien debe tener la anotación @DataBase
 
 ```kotlin
- abstract class SchoolDataBase
+@DataBase(
+entities =[
+School::class,
+Student::class,
+Director::class,
+Subject::class,
+StudentSubjectCrossRef::class
+ ], 
+ version = 1
+)
+ abstract class SchoolDataBase : RoomDataBase() {
+  abstract val schoolDao: SchoolDao
+  
+  companion object{
+    @Volatile
+    private var INSTANCE: SchoolDataBase? = null
+    
+    fun getInstance(context:Context): SchoolDataBase{
+     synchronized(this){
+       return INSTANCE ?: Room.databaseBuilder(
+        context.applicationContext,
+        SchoolDatabase::class.java,
+        "school_db"
+       ).build.also {
+       INSTANCE = it
+       }
+     }
+    }
+  }
+ }
 
 ```
+
+la version es para que room sepa que hay una actualización de la la BD
+tambien hay que implementar una abstract. y creamos un singleton de la BD.
+Volatile quiere decir que cuando se cambia el INSTANCE se hace visible a otros threads.
+fun getInstance construye nuestra DB
 
 
 
