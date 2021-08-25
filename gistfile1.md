@@ -191,3 +191,33 @@ data class SubjectWithStudents(
   val students: List<Student>
 )
 ```
+
+hay que agregar mas funciones al dao 
+
+```kotlin
+ @Insert(OnConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertSubject (subject:Subject)
+ 
+  @Insert(OnConflict = OnConflictStrategy.REPLACE)
+ suspend fun insertStudentSubjectCrossRef (crossRef: StudentSubjectCrossRef)
+ 
+ @Transaction
+ @Query("SELECT * FROM subject WHERE subjectName =:subjectName")
+ suspend fun getStudentsOfSubject(subjectName:String): List<SubjectWithStudents>
+ 
+  @Transaction
+ @Query("SELECT * FROM student WHERE studentName =:studentName")
+ suspend fun getSubjectsOfStudents(studentName:String): List<StudentWithSubjects>
+
+```
+
+queremos crear una base de datos, entonces en nuestro root package hacemos una nueva clase
+
+```kotlin
+ abstract class SchoolDataBase
+
+```
+
+
+
+
