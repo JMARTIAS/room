@@ -136,5 +136,58 @@ Luego lo que hay que hacer es actualizar nuestro DAO con las queries que necesit
 
 ```
 
+## Relación N:M 
+
+cada estudiante puede tener muchos ramos y cada ramo puede tener muchos alumnos, 
+así que creamos una nueva clase en nuestro paquete entity.
+
+```kotlin
+@Entity
+data class Subject(
+@PrimaryKey (autoGenerate = false)
+val subjectName:String)
+
+```
+
+ahora la relación entre nuestras tablas necesita una tabla con ambas PK, la hacemos en nuestro paquete relations
 
 
+```kotlin
+@Entity(primaryKeys = ["studentName", "subjectName"])
+data class StudentSubjectCrossRef(
+ val studentName:String,
+ val subjectName:String
+)
+```
+
+acá ninguno de los 2 es la PK sino que su PK es una combinación de ambas, pero hayque decirle  a Room que esta entity establece una relación entre 2 tablas. hay que insertarle datos a esta tabla al agregar alumnos o ramos
+decirle que las 2 tablas están relacionadas
+queremos consultar 1 estudiante y que tenga todos sus ramos y viceversa, así que hacemos 2 clases mas para estas relaciones
+
+```kotlin
+data class StudentWithSubjects(
+ @Embedded val student: Student,
+ @Relation(
+  parentColumn = "studentName"
+  entityColumn = "subjectName"
+  assoiciateBy = Junction(StudentSubjectCrossRef::class)
+  )
+  val subjects: List<Subject>
+)
+```
+
+a esta clase hayque decirle que tabla hace esta relación, para que room lo sepa, eso es lo que hace el associateBy. Es una clase helper.
+
+se hace lo mismo con una clase SubjectWithStudents
+
+```kotlin
+data class SubjectWithStudents(
+ @Embedded val subject: Subject,
+ @Relation(
+  parentColumn = "subjectName"
+  entityColumn = "studentName"
+  assoiciateBy = Junction(StudentSubjectCrossRef::class)
+  )
+  val students: List<Student>
+)
+```
