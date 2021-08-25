@@ -270,6 +270,15 @@ lifecycleScope.launch{
  schools.forEach{dao.insertDirector(it)}
 }
 ```
+para hacer queries las hago en el mismo lifecyclescope, para asegurarme que no entre a otro thread
+```kotlin
+
+lifecycleScope.launch{
+ schools.forEach{dao.insertDirector(it)}
+ val schoolWithDirector = dao.getSchoolAndDirectorWithSchoolName("The Kent School")
+ //esto trae una lista asi que hay que obtener al primero
+}
+```
 
 
 
