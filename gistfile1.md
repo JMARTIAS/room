@@ -17,10 +17,15 @@ implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 ```
 
-tambien se debe poner en plugins (un poco mas arriba 
+tambien se debe poner en plugins (un poco mas arriba)
 ```gradle
 id 'kotlin-kapt'
 ```
 
 despues se hace el sync now
-´´´kotlin´´´
+
+creo un paquete entities para agregar nuestras tablas, que son data clases, hay que poner el Entity para que lo reconozca. en tableName le cambio el nombre a la tabla en room, sino se llamará igual que la clase
+```kotlin
+@Entity (tableName = "director_table")
+data class Director{}
+```
